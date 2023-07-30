@@ -15,3 +15,8 @@ func main() {
 }
 
 ```
+
+## Before run make migrateup
+```bash
+export database=postgres://postgres:password@localhost:5432/go-kafka-simple?sslmode=disable
+```

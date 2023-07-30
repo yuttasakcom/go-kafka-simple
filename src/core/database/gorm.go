@@ -20,3 +20,7 @@ func GormConnect(pgCfg config.DBer) *gorm.DB {
 	fmt.Println("Connected to Postgres!")
 	return db
 }
+
+func (g *GormDB) Create(v interface{}) error {
+	return g.DB.Create(v).Error
+}
