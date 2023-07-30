@@ -8,20 +8,22 @@ import (
 )
 
 type Configer interface {
-	App() *App
+	App() App
+	DB() DB
 }
-type Config struct {
-	app *App
+type config struct {
+	app App
+	db  DB
 }
 
-func NewConfig(path string) *Config {
+func NewConfig(path string) config {
 	env, err := godotenv.Read(path)
 	if err != nil {
 		log.Fatalf("Error loading .env file: %v", err)
 	}
 
-	return &Config{
-		app: &App{
+	return config{
+		app: App{
 			host: env["APP_HOST"],
 			port: func() int {
 				p, err := strconv.Atoi(env["APP_PORT"])
@@ -31,9 +33,43 @@ func NewConfig(path string) *Config {
 				return p
 			}(),
 		},
+		db: DB{
+			Pg: pgDB{
+				host: env["PG_DB_HOST"],
+				port: func() int {
+					p, err := strconv.Atoi(env["PG_DB_PORT"])
+					if err != nil {
+						log.Fatalf("Error port fail %v", err)
+					}
+					return p
+				}(),
+				user:     env["PG_DB_USER"],
+				password: env["PG_DB_PASSWORD"],
+				dbname:   env["PG_DB_NAME"],
+				sslmode:  env["PG_DB_SSLMODE"],
+				timezone: env["PG_DB_TIMEZONE"],
+			},
+			Mg: mgDB{
+				host: env["MG_DB_HOST"],
+				port: func() int {
+					p, err := strconv.Atoi(env["MG_DB_PORT"])
+					if err != nil {
+						log.Fatalf("Error port fail %v", err)
+					}
+					return p
+				}(),
+				user:     env["MG_DB_USER"],
+				password: env["MG_DB_PASSWORD"],
+				dbname:   env["MG_DB_NAME"],
+			},
+		},
 	}
 }
 
-func (c *Config) App() *App {
+func (c config) App() App {
 	return c.app
+}
+
+func (c config) DB() DB {
+	return c.db
 }

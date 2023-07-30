@@ -40,3 +40,7 @@ func (c *FiberContext) Status(code int) common.ContextHanlder {
 func (c *FiberContext) JSON(v interface{}) error {
 	return c.Ctx.JSON(v)
 }
+
+func (r *FiberApp) Post(path string, handler func(common.ContextHanlder)) {
+	r.App.Post(path, NewFiberHandler(handler))
+}

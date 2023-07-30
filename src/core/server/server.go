@@ -7,8 +7,9 @@ import (
 	"sync"
 	"syscall"
 
-	"github.com/yuttasakcom/go-kafka-simple/src/core"
 	"github.com/yuttasakcom/go-kafka-simple/src/core/app"
+	"github.com/yuttasakcom/go-kafka-simple/src/core/config"
+	"github.com/yuttasakcom/go-kafka-simple/src/core/database"
 	"github.com/yuttasakcom/go-kafka-simple/src/core/router"
 )
 
@@ -17,12 +18,14 @@ type Serverer interface {
 }
 
 type Server struct {
-	core *core.Core
+	config config.Configer
+	store  *database.Store
 }
 
-func NewServer() *Server {
+func NewServer(config config.Configer) *Server {
 	return &Server{
-		core: core.NewCore(),
+		config: config,
+		store:  database.NewStore(config.DB()),
 	}
 }
 
@@ -43,8 +46,8 @@ func (s *Server) Start() {
 
 	go func() {
 		defer wg.Done()
-		router.Register(app)
-		host := s.core.Cfg.App().Host()
+		router.Register(app, s.store)
+		host := s.config.App().Host()
 		app.Listen(host)
 	}()
 
