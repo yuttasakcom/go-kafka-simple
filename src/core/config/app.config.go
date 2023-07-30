@@ -12,6 +12,7 @@ type App struct {
 	DebugLog   bool
 	AppName    string
 	AppVersion string
+	AppEnv     string
 }
 
 func (a App) Host() string {

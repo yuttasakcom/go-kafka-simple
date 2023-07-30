@@ -10,10 +10,12 @@ import (
 type Configer interface {
 	App() App
 	DB() DB
+	Jaeger() Jaeger
 }
 type config struct {
-	app App
-	db  DB
+	app    App
+	db     DB
+	jaeger Jaeger
 }
 
 func NewConfig(path string) config {
@@ -41,6 +43,7 @@ func NewConfig(path string) config {
 			}(),
 			AppName:    env["APP_NAME"],
 			AppVersion: env["APP_VERSION"],
+			AppEnv:     env["APP_ENV"],
 		},
 		db: DB{
 			Pg: pgDB{
@@ -72,6 +75,17 @@ func NewConfig(path string) config {
 				dbname:   env["MG_DB_NAME"],
 			},
 		},
+		jaeger: Jaeger{
+			host: env["JAEGER_HOST"],
+			port: func() int {
+				p, err := strconv.Atoi(env["JAEGER_PORT"])
+				if err != nil {
+					log.Fatalf("Error port fail %v", err)
+				}
+				return p
+			}(),
+			uri: env["JAEGER_URI"],
+		},
 	}
 }
 
@@ -81,4 +95,8 @@ func (c config) App() App {
 
 func (c config) DB() DB {
 	return c.db
+}
+
+func (c config) Jaeger() Jaeger {
+	return c.jaeger
 }

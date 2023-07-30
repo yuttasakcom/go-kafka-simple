@@ -5,15 +5,18 @@ import (
 	"github.com/yuttasakcom/go-kafka-simple/src/core/common"
 	"github.com/yuttasakcom/go-kafka-simple/src/core/config"
 	"github.com/yuttasakcom/go-kafka-simple/src/core/server"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/exporters/jaeger"
+	"go.opentelemetry.io/otel/sdk/resource"
+	"go.opentelemetry.io/otel/sdk/trace"
+	semconv "go.opentelemetry.io/otel/semconv/v1.17.0"
 )
 
 func main() {
 	cfg := config.NewConfig(common.EnvFile())
 	initLogger(cfg.App())
-
-	// @TODO: init tracer
-	// @TODO: connected db
-	// @TODO: start server
+	initTracer(cfg)
 
 	server.NewServer(cfg).Start()
 	// @TODO: start worker
@@ -32,4 +35,29 @@ func initLogger(cfg config.App) {
 	config.Version = cfg.AppVersion
 
 	slog.L().Configure(config)
+}
+
+func initTracer(cfg config.Configer) {
+	exp, err := jaeger.New(jaeger.WithCollectorEndpoint(jaeger.WithEndpoint("http://localhost:14268/api/traces")))
+	if err != nil {
+		slog.L().Fatal("failed to create the Jaeger exporter: %v", slog.Error(err))
+	}
+
+	r, err := resource.Merge(resource.Default(), resource.NewWithAttributes(
+		semconv.SchemaURL,
+		semconv.ServiceNameKey.String(cfg.App().AppName),
+		semconv.ServiceVersionKey.String(cfg.App().AppVersion),
+		attribute.String("environment", cfg.App().AppEnv),
+	))
+
+	if err != nil {
+		slog.L().Fatal("Error init Jaeger resource", slog.Error(err))
+	}
+
+	tp := trace.NewTracerProvider(
+		trace.WithBatcher(exp),
+		trace.WithResource(r),
+	)
+
+	otel.SetTracerProvider(tp)
 }

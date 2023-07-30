@@ -23,7 +23,7 @@ func MongoConnect(config config.DBer) *mongo.Database {
 	defer cancel()
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(config.Url()))
 	if err != nil {
-		log.Fatalf("Error connect mongo %v", err)
+		log.Fatalf("Error connect mongo %v", slog.Error(err))
 	}
 	slog.L().Info("Connected to MongoDB!")
 	return client.Database(config.Dbname())

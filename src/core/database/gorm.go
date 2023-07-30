@@ -14,7 +14,7 @@ type GormDB struct {
 func GormConnect(pgCfg config.DBer) *gorm.DB {
 	db, err := gorm.Open(postgres.Open(pgCfg.Url()), &gorm.Config{})
 	if err != nil {
-		slog.L().Fatal("Error connect postgres", err)
+		slog.L().Fatal("Error connect postgres", slog.Error(err))
 	}
 	slog.L().Info("Connected to Postgres!")
 	return db

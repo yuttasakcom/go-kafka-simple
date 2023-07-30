@@ -5,11 +5,11 @@ import (
 )
 
 type Store struct {
-	*GormDB
-	// *MongoDB
+	// *GormDB
+	*MongoDB
 }
 
 func NewStore(config config.DB) *Store {
-	return &Store{&GormDB{(GormConnect(config.Pg))}}
-	// return &Store{&MongoDB{(MongoConnect(config.Mg))}}
+	// return &Store{&GormDB{(GormConnect(config.Pg))}}
+	return &Store{&MongoDB{(MongoConnect(config.Mg))}}
 }
