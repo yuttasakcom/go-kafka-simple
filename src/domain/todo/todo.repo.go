@@ -2,7 +2,7 @@ package todo
 
 import "github.com/yuttasakcom/go-kafka-simple/src/core/database"
 
-type modeler interface {
+type repoer interface {
 	Create(todo *Todo) error
 }
 

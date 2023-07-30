@@ -7,11 +7,11 @@ import (
 )
 
 type TodoHandler struct {
-	model modeler
+	repo repoer
 }
 
-func NewTodoHandler(model modeler) *TodoHandler {
-	return &TodoHandler{model: model}
+func NewTodoHandler(repo repoer) *TodoHandler {
+	return &TodoHandler{repo: repo}
 }
 
 func (t *TodoHandler) Create(c common.ContextHanlder) {
@@ -21,7 +21,7 @@ func (t *TodoHandler) Create(c common.ContextHanlder) {
 		return
 	}
 
-	err := t.model.Create(&todo)
+	err := t.repo.Create(&todo)
 	if err != nil {
 		c.Status(http.StatusInternalServerError).JSON(TodoError{Msg: err.Error()})
 		return
