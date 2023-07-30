@@ -2,12 +2,12 @@ package database
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"reflect"
 	"strings"
 	"time"
 
+	slog "github.com/Sellsuki/sellsuki-go-logger"
 	pluralize "github.com/gertd/go-pluralize"
 	"github.com/yuttasakcom/go-kafka-simple/src/core/config"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -25,7 +25,7 @@ func MongoConnect(config config.DBer) *mongo.Database {
 	if err != nil {
 		log.Fatalf("Error connect mongo %v", err)
 	}
-	fmt.Println("Connected to MongoDB!")
+	slog.L().Info("Connected to MongoDB!")
 	return client.Database(config.Dbname())
 }
 

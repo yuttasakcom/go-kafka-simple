@@ -7,8 +7,11 @@ type Apper interface {
 }
 
 type App struct {
-	host string
-	port int
+	host       string
+	port       int
+	DebugLog   bool
+	AppName    string
+	AppVersion string
 }
 
 func (a App) Host() string {

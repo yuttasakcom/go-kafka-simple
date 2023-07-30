@@ -1,8 +1,7 @@
 package database
 
 import (
-	"fmt"
-
+	slog "github.com/Sellsuki/sellsuki-go-logger"
 	"github.com/yuttasakcom/go-kafka-simple/src/core/config"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -15,9 +14,9 @@ type GormDB struct {
 func GormConnect(pgCfg config.DBer) *gorm.DB {
 	db, err := gorm.Open(postgres.Open(pgCfg.Url()), &gorm.Config{})
 	if err != nil {
-		fmt.Println("db err: (Init) ", err)
+		slog.L().Fatal("Error connect postgres", err)
 	}
-	fmt.Println("Connected to Postgres!")
+	slog.L().Info("Connected to Postgres!")
 	return db
 }
 

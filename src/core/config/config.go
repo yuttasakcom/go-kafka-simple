@@ -32,6 +32,15 @@ func NewConfig(path string) config {
 				}
 				return p
 			}(),
+			DebugLog: func() bool {
+				d, err := strconv.ParseBool(env["APP_DEBUG_LOG"])
+				if err != nil {
+					log.Fatalf("Error converting APP_DEBUG_LOG to bool: %v", err)
+				}
+				return d
+			}(),
+			AppName:    env["APP_NAME"],
+			AppVersion: env["APP_VERSION"],
 		},
 		db: DB{
 			Pg: pgDB{

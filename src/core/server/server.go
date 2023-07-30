@@ -1,12 +1,12 @@
 package server
 
 import (
-	"fmt"
 	"os"
 	"os/signal"
 	"sync"
 	"syscall"
 
+	slog "github.com/Sellsuki/sellsuki-go-logger"
 	"github.com/yuttasakcom/go-kafka-simple/src/core/app"
 	"github.com/yuttasakcom/go-kafka-simple/src/core/config"
 	"github.com/yuttasakcom/go-kafka-simple/src/core/database"
@@ -40,7 +40,7 @@ func (s *Server) Start() {
 	go func() {
 		defer wg.Done()
 		<-c
-		fmt.Println("Gracefully shutting down...")
+		slog.L().Info("Gracefully shutting down...")
 		app.Shutdown()
 	}()
 
