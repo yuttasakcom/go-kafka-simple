@@ -47,9 +47,9 @@ func (s *Server) Start() {
 		ExposeHeaders: "content-disposition",
 	}))
 
-	app.Use(adapter.NewHandler(func(ch common.ContextHanlder) {
-		middleware.Tracer(ch)
-		ch.Next()
+	app.Use(adapter.NewHandler(func(c common.CtxHanlder) {
+		middleware.Tracer(c)
+		c.Next()
 	}))
 
 	go func() {

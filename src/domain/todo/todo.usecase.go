@@ -18,7 +18,7 @@ func NewTodoHandler(repo repoer) *TodoHandler {
 	return &TodoHandler{repo: repo}
 }
 
-func (t *TodoHandler) Create(c common.ContextHanlder) {
+func (t *TodoHandler) Create(c common.CtxHanlder) {
 	_, span := tracer.Start(middleware.GetSpanContext(c), "todo.usecase.Create")
 	defer span.End()
 

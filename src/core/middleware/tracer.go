@@ -16,7 +16,7 @@ var tracer = otel.GetTracerProvider().Tracer("fiber-server")
 
 const contextLocalKey = "fiber-otel-tracer"
 
-func Tracer(c common.ContextHanlder) error {
+func Tracer(c common.CtxHanlder) error {
 	propagator := propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{})
 	carrier := propagation.HeaderCarrier{}
 
@@ -61,7 +61,7 @@ func Tracer(c common.ContextHanlder) error {
 	return err
 }
 
-func GetSpanContext(c common.ContextHanlder) context.Context {
+func GetSpanContext(c common.CtxHanlder) context.Context {
 	ctx, ok := c.Locals(contextLocalKey).(context.Context)
 	if !ok {
 		slog.L().Warn("Failed to get span context from fiber context")
