@@ -8,9 +8,12 @@ import (
 
 	slog "github.com/Sellsuki/sellsuki-go-logger"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/yuttasakcom/go-kafka-simple/src/core/adapter"
 	"github.com/yuttasakcom/go-kafka-simple/src/core/app"
+	"github.com/yuttasakcom/go-kafka-simple/src/core/common"
 	"github.com/yuttasakcom/go-kafka-simple/src/core/config"
 	"github.com/yuttasakcom/go-kafka-simple/src/core/database"
+	"github.com/yuttasakcom/go-kafka-simple/src/core/middleware"
 	"github.com/yuttasakcom/go-kafka-simple/src/core/router"
 )
 
@@ -42,6 +45,11 @@ func (s *Server) Start() {
 		AllowHeaders:  "*",
 		AllowMethods:  "GET, POST, PUT, PATCH, DELETE, OPTIONS",
 		ExposeHeaders: "content-disposition",
+	}))
+
+	app.Use(adapter.NewHandler(func(ch common.ContextHanlder) {
+		middleware.Tracer(ch)
+		ch.Next()
 	}))
 
 	go func() {

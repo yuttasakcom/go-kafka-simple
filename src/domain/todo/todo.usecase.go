@@ -4,7 +4,11 @@ import (
 	"net/http"
 
 	"github.com/yuttasakcom/go-kafka-simple/src/core/common"
+	"github.com/yuttasakcom/go-kafka-simple/src/core/middleware"
+	"go.opentelemetry.io/otel"
 )
+
+var tracer = otel.Tracer("todo_usecase")
 
 type TodoHandler struct {
 	repo repoer
@@ -15,6 +19,9 @@ func NewTodoHandler(repo repoer) *TodoHandler {
 }
 
 func (t *TodoHandler) Create(c common.ContextHanlder) {
+	_, span := tracer.Start(middleware.GetSpanContext(c), "todo.usecase.Create")
+	defer span.End()
+
 	var todo Todo
 	if err := c.Bind(&todo); err != nil {
 		c.Status(http.StatusBadRequest).JSON(TodoError{Msg: "Invalid request payload"})

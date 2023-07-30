@@ -11,7 +11,7 @@ import (
 )
 
 func Register(app *app.App, store *database.Store) {
-	health := adapter.NewFiberHandler(func(ch common.ContextHanlder) {
+	health := adapter.NewHandler(func(ch common.ContextHanlder) {
 		ch.Status(http.StatusOK).JSON(map[string]string{"status": "ok"})
 	})
 	app.Get("/system/health", health)
