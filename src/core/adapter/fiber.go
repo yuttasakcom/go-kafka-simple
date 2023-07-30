@@ -1,6 +1,8 @@
 package adapter
 
 import (
+	"time"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/yuttasakcom/go-kafka-simple/src/core/common"
 )
@@ -10,7 +12,13 @@ type FiberApp struct {
 }
 
 func NewFiberApp() *FiberApp {
-	return &FiberApp{fiber.New()}
+	return &FiberApp{fiber.New(fiber.Config{
+		CaseSensitive:         false,
+		StrictRouting:         false,
+		DisableStartupMessage: true,
+		ReadBufferSize:        10240,
+		ReadTimeout:           30 * time.Second,
+	})}
 }
 
 func NewFiberHandler(handler func(common.ContextHanlder)) fiber.Handler {

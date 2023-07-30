@@ -7,6 +7,7 @@ import (
 	"syscall"
 
 	slog "github.com/Sellsuki/sellsuki-go-logger"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/yuttasakcom/go-kafka-simple/src/core/app"
 	"github.com/yuttasakcom/go-kafka-simple/src/core/config"
 	"github.com/yuttasakcom/go-kafka-simple/src/core/database"
@@ -30,12 +31,18 @@ func NewServer(config config.Configer) *Server {
 }
 
 func (s *Server) Start() {
-	app := app.NewApp()
-
 	wg := new(sync.WaitGroup)
 	wg.Add(2)
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, syscall.SIGINT, syscall.SIGTERM)
+
+	app := app.NewApp()
+	app.Use(cors.New(cors.Config{
+		AllowOrigins:  "*",
+		AllowHeaders:  "*",
+		AllowMethods:  "GET, POST, PUT, PATCH, DELETE, OPTIONS",
+		ExposeHeaders: "content-disposition",
+	}))
 
 	go func() {
 		defer wg.Done()
