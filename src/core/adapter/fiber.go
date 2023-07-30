@@ -22,7 +22,7 @@ func NewFiberApp() *FiberApp {
 	})}
 }
 
-func NewFiberHandler(handler func(common.CtxHanlder)) fiber.Handler {
+func NewFiberHandler(handler func(common.Ctx)) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		handler(NewFiberContext(c))
 		return nil
@@ -41,7 +41,7 @@ func (c *FiberContext) Bind(v interface{}) error {
 	return c.Ctx.BodyParser(v)
 }
 
-func (c *FiberContext) Status(code int) common.CtxHanlder {
+func (c *FiberContext) Status(code int) common.Ctx {
 	c.Ctx.Status(code)
 	return c
 }
@@ -97,6 +97,6 @@ func (c *FiberContext) Response() *fasthttp.Response {
 	return c.Ctx.Response()
 }
 
-func (r *FiberApp) Post(path string, handler func(common.CtxHanlder)) {
+func (r *FiberApp) Post(path string, handler func(common.Ctx)) {
 	r.App.Post(path, NewFiberHandler(handler))
 }

@@ -11,7 +11,7 @@ import (
 )
 
 func Register(app *app.App, store *database.Store) {
-	health := adapter.NewHandler(func(ch common.CtxHanlder) {
+	health := adapter.NewHandler(func(ch common.Ctx) {
 		ch.Status(http.StatusOK).JSON(map[string]string{"status": "ok"})
 	})
 	app.Get("/system/health", health)

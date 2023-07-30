@@ -5,6 +5,6 @@ import (
 	"github.com/yuttasakcom/go-kafka-simple/src/core/common"
 )
 
-func NewHandler(handler func(common.CtxHanlder)) fiber.Handler {
+func NewHandler(handler func(common.Ctx)) fiber.Handler {
 	return NewFiberHandler(handler)
 }

@@ -5,9 +5,9 @@ import (
 	"github.com/valyala/fasthttp"
 )
 
-type CtxHanlder interface {
+type Ctx interface {
 	Bind(v interface{}) error
-	Status(code int) CtxHanlder
+	Status(code int) Ctx
 	JSON(v interface{}) error
 	SendString(s string) error
 	Next() error
