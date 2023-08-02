@@ -9,13 +9,13 @@ import (
 
 type Configer interface {
 	App() App
-	DB() DB
+	DBConfig() DBConfig
 	Jaeger() Jaeger
 }
 type config struct {
-	app    App
-	db     DB
-	jaeger Jaeger
+	app      App
+	dbConfig DBConfig
+	jaeger   Jaeger
 }
 
 func NewConfig(path string) config {
@@ -45,7 +45,7 @@ func NewConfig(path string) config {
 			AppVersion: env["APP_VERSION"],
 			AppEnv:     env["APP_ENV"],
 		},
-		db: DB{
+		dbConfig: DBConfig{
 			Pg: pgDB{
 				host: env["PG_DB_HOST"],
 				port: func() int {
@@ -93,8 +93,8 @@ func (c config) App() App {
 	return c.app
 }
 
-func (c config) DB() DB {
-	return c.db
+func (c config) DBConfig() DBConfig {
+	return c.dbConfig
 }
 
 func (c config) Jaeger() Jaeger {

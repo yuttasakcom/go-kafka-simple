@@ -5,11 +5,18 @@ import (
 )
 
 type Store struct {
-	// *GormDB
+	// Use MongoDB
 	*MongoDB
+
+	// Use PostgreSQL
+	// *GormDB
 }
 
-func NewStore(config config.DB) *Store {
-	// return &Store{&GormDB{(GormConnect(config.Pg))}}
+// Easy to change database
+func NewStore(config config.DBConfig) *Store {
+	// Use MongoDB
 	return &Store{&MongoDB{(MongoConnect(config.Mg))}}
+
+	// Use PostgreSQL
+	// return &Store{&GormDB{(GormConnect(config.Pg))}}
 }

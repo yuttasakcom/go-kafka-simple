@@ -29,7 +29,7 @@ type Server struct {
 func NewServer(config config.Configer) *Server {
 	return &Server{
 		config: config,
-		store:  database.NewStore(config.DB()),
+		store:  database.NewStore(config.DBConfig()),
 	}
 }
 

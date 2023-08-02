@@ -2,9 +2,15 @@ package config
 
 import "fmt"
 
-type DB struct {
+// DBConfig is the struct that contains the database configuration
+type DBConfig struct {
 	Pg pgDB
 	Mg mgDB
+}
+
+type DBConfiger interface {
+	Url() string
+	Dbname() string
 }
 
 type pgDB struct {
@@ -23,11 +29,6 @@ type mgDB struct {
 	user     string
 	password string
 	dbname   string
-}
-
-type DBer interface {
-	Url() string
-	Dbname() string
 }
 
 func (d pgDB) Url() string {

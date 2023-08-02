@@ -18,7 +18,7 @@ type MongoDB struct {
 	*mongo.Database
 }
 
-func MongoConnect(config config.DBer) *mongo.Database {
+func MongoConnect(config config.DBConfiger) *mongo.Database {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(config.Url()))
